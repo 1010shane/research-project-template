@@ -95,6 +95,170 @@ rather than precious**.
 
 ------------------------------------------------------------------------
 
+## Using This Repository as a Project Template
+
+This repository can serve as a **language-neutral research project
+template**. The template should contain stable directory structure,
+documentation, and generic Git configuration, while each real project
+generates its own language-specific environment metadata.
+
+A recommended template structure is:
+
+``` text
+research-project-template/
+├── README.md
+├── .gitignore
+├── data/
+│   ├── raw/.gitkeep
+│   ├── processed/.gitkeep
+│   └── external/.gitkeep
+├── notebooks/.gitkeep
+├── scripts/.gitkeep
+└── outputs/
+    ├── figures/.gitkeep
+    ├── tables/.gitkeep
+    └── reports/.gitkeep
+```
+
+Git does not track empty directories, so `.gitkeep` placeholder files
+preserve the directory structure. `.gitkeep` is only a convention and
+has no special behavior in Git.
+
+### What belongs in the template
+
+Keep generic, reusable structure in the template: `README.md`,
+`.gitignore`, the standard directories above, and their `.gitkeep`
+placeholders. Optional directories such as `tests/` and `docs/` can be
+added when a project needs them.
+
+Do **not** populate the template with empty or placeholder
+dependency-management files. Generate these for each real project
+instead.
+
+For Python, `uv` should generate `pyproject.toml`, `uv.lock`,
+`.python-version`, and the local `.venv/`. In particular, do not add an
+empty `pyproject.toml` to the template.
+
+For R, `renv` should generate `.Rprofile`, `renv.lock`, and `renv/`.
+
+Lockfiles belong in the individual projects where they were generated.
+Installed environments such as `.venv/` and `renv/library/` should not
+be committed.
+
+### Create a new project from the GitHub template
+
+After this repository has been pushed to GitHub, enable **Template
+repository** under the repository's GitHub settings.
+
+To create a new project with the GitHub CLI, start in the directory
+where projects are stored:
+
+``` bash
+cd ~/Projects
+```
+
+Then create a new private GitHub repository from the template and clone
+that new repository locally:
+
+``` bash
+gh repo create PROJECT-NAME \
+  --template YOUR-GITHUB-USERNAME/research-project-template \
+  --private \
+  --clone
+```
+
+Replace `PROJECT-NAME` with the new project's name and
+`YOUR-GITHUB-USERNAME` with the GitHub account that owns the template.
+Use `--public` instead of `--private` when appropriate.
+
+This command:
+
+1.  Creates a new GitHub repository from the template.
+2.  Creates it as an independent project rather than a continuation of
+    the template's Git history.
+3.  Clones the new repository to the current machine.
+
+Then enter the project and open it:
+
+``` bash
+cd PROJECT-NAME
+code .
+```
+
+Do **not** use `git pull` to instantiate a new project from the
+template. `git pull` updates an existing local repository from its
+configured remote. Likewise, normally do not clone the template
+repository itself when starting a new research project.
+
+The intended workflow is:
+
+``` text
+GitHub template repository
+          |
+          |  gh repo create --template ... --clone
+          v
+New independent GitHub repository
+          |
+          v
+New local project directory
+          |
+          +-- initialize uv for Python
+          +-- initialize renv for R
+          +-- initialize both for mixed projects
+```
+
+### Initialize a Python project created from the template
+
+``` bash
+uv init
+uv add --dev jupyter ipykernel
+mkdir -p src
+```
+
+Add actual project dependencies as required:
+
+``` bash
+uv add numpy pandas scipy matplotlib
+```
+
+Commit `pyproject.toml`, `uv.lock`, and `.python-version`. Do not commit
+`.venv/`.
+
+### Initialize an R project created from the template
+
+``` bash
+Rscript -e 'renv::init(bare = TRUE)'
+mkdir -p R
+```
+
+Install dependencies as needed, then record the environment:
+
+``` bash
+Rscript -e 'renv::install("dplyr")'
+Rscript -e 'renv::snapshot()'
+Rscript -e 'renv::status()'
+```
+
+Commit `renv.lock` and the `renv` activation/configuration files, but
+not `renv/library/`.
+
+### Initialize a mixed R/Python project
+
+Initialize both environment managers:
+
+``` bash
+uv init
+uv add --dev jupyter ipykernel
+Rscript -e 'renv::init(bare = TRUE)'
+mkdir -p src R
+```
+
+`uv` manages Python while `renv` independently manages R. Commit both
+sets of project-specific dependency metadata and lockfiles.
+
+The template provides the **project skeleton**; each real repository
+generates and records its own **environment specification**.
+
 ## Global Tools vs. Project Dependencies
 
 ### Appropriate global tools
