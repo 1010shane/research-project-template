@@ -1,0 +1,63 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# R
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# renv: keep reproducibility/configuration files, ignore installed package library
+renv/library/
+renv/staging/
+renv/python/
+renv/local/
+renv/cellar/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Temporary / cache files
+.cache/
+tmp/
+temp/
+*.tmp
+
+# Logs
+*.log
+
+# Build / distribution artifacts
+build/
+dist/
+*.egg-info/
+
+# Optional local data and generated outputs
+# Uncomment these for projects where data/output should not be version-controlled:
+# data/
+# outputs/
+# results/
