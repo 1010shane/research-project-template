@@ -857,6 +857,85 @@ sensitive datasets
 large generated outputs unless intentionally tracked
 ```
 
+## GitHub CLI (`gh`)
+
+`gh` manages github repositories, issues, and pull requests from the terminal. Use `git` to track and commit local changes, and `gh` to work with GitHub. 
+
+``` bash
+brew install gh
+```
+
+Sign in and verify your connection:
+
+```bash
+gh auth login
+gh status
+```
+
+Follow the prompts to authenticate through your browser. Authentication is generally a one-time setup for each machine.
+
+## Publish an existing local project
+
+```bash
+git status
+git diff
+git add README.md
+git commit -m "Document project setup"
+```
+
+Stage any other intended project files explicitly before committing. For a local Git repository that does not yet have a GitHub remote:
+
+```bash
+gh repo create PROJECT_NAME --private --source=. --remote=origin --push
+```
+
+Replace `PROJECT_NAME` with your repository name. This creates a private
+GitHub repository, adds the `origin` remote, and pushes the existing commits.
+
+## Clone or open a repository
+
+Clone an existing project:
+
+```bash
+gh repo clone OWNER/REPOSITORY
+cd REPOSITORY
+```
+
+Open the current repository in your browser:
+
+```bash
+gh repo view --web
+```
+
+After cloning, recreate its dependencies with `uv sync` or `renv::restore()` as appropriate.
+
+## Collaborate with pull requests
+
+Create a branch for a change:
+
+```bash
+git switch -c update-analysis
+```
+
+After editing, reviewing, and committing your changes:
+
+```bash
+git push -u origin update-analysis
+gh pr create
+```
+
+Follow the prompts to describe the change. Inspect pull requests with:
+
+```bash
+gh pr status
+gh pr list
+gh pr view --web
+```
+
+See the [GitHub CLI manual](https://cli.github.com/manual/)
+[repository creation reference](https://cli.github.com/manual/gh_repo_create)
+and [pull request reference](https://cli.github.com/manual/gh_pr_create)
+
 ------------------------------------------------------------------------
 
 # Recreating a Project on Another Machine
